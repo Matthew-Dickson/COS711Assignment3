@@ -7,6 +7,7 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import KFold
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
+from functools import partial
 
 from numpy.random import seed
 np.random.seed(2)
@@ -156,11 +157,11 @@ for run in range(RUNS):
     np.random.seed(seed)
 
     #model
-    model = tf.keras.Sequential([
-                             tf.keras.layers.LSTM(20, return_sequences=True, dropout=0.2, recurrent_dropout=0.2, input_shape=(11,66)),
-                             tf.keras.layers.LSTM(10, return_sequences=False, recurrent_dropout=0.2),
-                             tf.keras.layers.Dense(128, activation='relu'),
-                             tf.keras.layers.Dense(64, activation='sigmoid'),
+   model = tf.keras.Sequential([
+                             #tf.keras.layers.LSTM(20, return_sequences=True, dropout=0.2, recurrent_dropout=0.2, input_shape=(66,11),activation=partial(tf.nn.leaky_relu, alpha=0.01)),
+                             tf.keras.layers.LSTM(10, return_sequences=False, recurrent_dropout=0.2,input_shape=(11,66), activation=partial(tf.nn.leaky_relu, alpha=0.01)),
+                             tf.keras.layers.Dense(64, activation=partial(tf.nn.leaky_relu, alpha=0.01)),
+                             tf.keras.layers.Dense(64, activation=partial(tf.nn.leaky_relu, alpha=0.01)),
                              tf.keras.layers.Dense(1)
                               
     ]) 
