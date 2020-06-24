@@ -7,6 +7,7 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import KFold
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
+from functools import partial
 
 from numpy.random import seed
 np.random.seed(2)
@@ -163,17 +164,18 @@ for run in range(RUNS):
     #model
     model = tf.keras.Sequential([
                               
-                              tf.keras.layers.Conv1D(filters=20, kernel_size=6, activation='relu', input_shape=(726,1)),
-                              tf.keras.layers.Conv1D(filters=20, kernel_size=6, activation='relu'),
+                              tf.keras.layers.Conv1D(filters=20, kernel_size=6, activation=partial(tf.nn.leaky_relu, alpha=0.01), input_shape=(726,1)),
+                              #tf.keras.layers.Conv1D(filters=20, kernel_size=6, activation=partial(tf.nn.leaky_relu, alpha=0.01)),
                               tf.keras.layers.MaxPool1D(pool_size=6),
-                              tf.keras.layers.Conv1D(filters=10, kernel_size=2, activation='relu'),
-                              tf.keras.layers.Conv1D(filters=10, kernel_size=2, activation='relu'),
+                              tf.keras.layers.Conv1D(filters=10, kernel_size=2,  activation=partial(tf.nn.leaky_relu, alpha=0.01)),
+                              #tf.keras.layers.Conv1D(filters=10, kernel_size=2,  activation=partial(tf.nn.leaky_relu, alpha=0.01)),
                               tf.keras.layers.MaxPool1D(pool_size=2),
                               tf.keras.layers.Flatten(),
-                              tf.keras.layers.Dense(128, activation='relu'),
-                              tf.keras.layers.Dense(64, activation='sigmoid'),
+                              tf.keras.layers.Dense(128,  activation=partial(tf.nn.leaky_relu, alpha=0.01)),
+                              tf.keras.layers.Dense(64,  activation=partial(tf.nn.leaky_relu, alpha=0.01)),
                               tf.keras.layers.Dense(1)
     ])
+    
     
 
    #Save weights 
